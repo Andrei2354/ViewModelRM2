@@ -15,7 +15,7 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = "mapa",
+        startDestination = "crud",
         modifier = modifier
     ) {
         composable("mapa") {
