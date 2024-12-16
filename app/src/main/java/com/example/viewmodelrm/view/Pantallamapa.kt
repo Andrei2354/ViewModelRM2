@@ -24,7 +24,9 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FabPosition
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -35,8 +37,11 @@ import androidx.core.content.ContextCompat
 import com.example.viewmodelrm.R
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+
 
 data class Tile(val x: Int, val y: Int, val zoomLevel: Int)
 
@@ -58,93 +63,99 @@ val GoogleSat = object : XYTileSource(
 
 @Composable
 fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel) {
-
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
 
+    // Configuración del mapa
     TileSourceFactory.addTileSource(GoogleSat)
 
-
     val cameraState = rememberCameraState {
-        geoPoint = GeoPoint(28.992986562609960,  -13.495383991854991)
-        zoom = 15.0 // optional, default is 5.0
+        geoPoint = GeoPoint(28.992986562609960, -13.495383991854991)
+        zoom = 15.0 // Zoom inicial
     }
 
-    // define properties with remember with default value
     var mapProperties by remember {
         mutableStateOf(DefaultMapProperties)
     }
 
-    // setup mapProperties in side effect
     SideEffect {
         mapProperties = mapProperties
-            //.copy(isTilesScaledToDpi = true)
             .copy(tileSources = TileSourceFactory.MAPNIK)
             .copy(isEnableRotationGesture = true)
             .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
     }
 
-    OpenStreetMap(
-        modifier = Modifier.fillMaxSize(),
-        cameraState = cameraState,
-        properties = mapProperties // add properties
-    ){
-        grupoMarcador.forEach { elementos ->
-            var marcador = rememberMarkerState(
-                geoPoint =  GeoPoint(elementos.marcador.coordenadaX, elementos.marcador.coordenadaY)
-            )
-            var icono by remember { mutableStateOf(R.drawable.restaurante) }
-            var color = Color.Unspecified
-
-            when (elementos.grupoMarcadores[0].idGrupo) {
-                1 -> {
-                    icono = R.drawable.restaurante
-                    color = Color.White
-                }
-                2 -> {
-                    icono = R.drawable.playa
-                    color = Color.Cyan
-                }
-                3 -> {
-                    icono = R.drawable.acuario
-                    color = Color.Blue
-                }
-                4 -> {
-                    icono = R.drawable.parque
-                    color = Color.Magenta
-                }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = { navController.navigate("crud") },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Ir a CRUD"
+                )
             }
-            var titulo = elementos.marcador.titulo
-            elementos.grupoMarcadores.forEach { elementogrupo ->
-                var snipe = elementogrupo.typeGrupo
+        },
+        floatingActionButtonPosition = FabPosition.End // Botón flotante en la esquina inferior derecha
+    ) { innerPadding ->
+        OpenStreetMap(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding), // Respeta el espacio del FAB
+            cameraState = cameraState,
+            properties = mapProperties
+        ) {
+            grupoMarcador.forEach { elementos ->
+                val marcador = rememberMarkerState(
+                    geoPoint = GeoPoint(elementos.marcador.coordenadaX, elementos.marcador.coordenadaY)
+                )
+                var icono by remember { mutableStateOf(R.drawable.restaurante) }
+                var color = Color.Unspecified
 
-                Marker(
-                    state = marcador,
-                    title = titulo, // add title
-                    snippet = snipe, // add snippet
-                    icon = ContextCompat.getDrawable(LocalContext.current, icono)
-                ){
-                    Column(
-                        modifier = Modifier
-                            .size(80.dp)
-                            .background(color = color, shape = RoundedCornerShape(7.dp)),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                when (elementos.grupoMarcadores[0].idGrupo) {
+                    1 -> {
+                        icono = R.drawable.restaurante
+                        color = Color.White
+                    }
+                    2 -> {
+                        icono = R.drawable.playa
+                        color = Color.Cyan
+                    }
+                    3 -> {
+                        icono = R.drawable.acuario
+                        color = Color.Blue
+                    }
+                    4 -> {
+                        icono = R.drawable.parque
+                        color = Color.Magenta
+                    }
+                }
+
+                val titulo = elementos.marcador.titulo
+                elementos.grupoMarcadores.forEach { elementogrupo ->
+                    val snipe = elementogrupo.typeGrupo
+
+                    Marker(
+                        state = marcador,
+                        title = titulo,
+                        snippet = snipe,
+                        icon = ContextCompat.getDrawable(LocalContext.current, icono)
                     ) {
-                        // setup content of info window
-                        Text(text = it.title, textAlign = TextAlign.Center)
-                        Text(text = it.snippet, fontSize = 10.sp)
-                        Button(
-                            onClick = {
-                                navController.navigate("segundaPantalla")
-                            }
+                        Column(
+                            modifier = Modifier
+                                .size(80.dp)
+                                .background(color = color, shape = RoundedCornerShape(7.dp)),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Text(text = "Comentar")
+                            Text(text = it.title, textAlign = TextAlign.Center)
+                            Text(text = it.snippet, fontSize = 10.sp)
                         }
                     }
                 }
             }
         }
-
     }
 }
 
