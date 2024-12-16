@@ -1,10 +1,11 @@
 package com.example.viewmodelrm.data
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 
@@ -16,11 +17,21 @@ interface TaskDao {
     suspend fun insertMarcador(vararg  marcador: Marcador)
     @Insert
     suspend fun insertGrupo(vararg grupo: Grupo)
+    @Insert
+    suspend fun insertValo(vararg valoracion: Valoracion)
     @Query("SELECT * FROM types")
     suspend fun getAllGrupos(): List<Grupo>
 
     @Query("SELECT * FROM marcador")
     suspend fun getAllMarcadores(): List<Marcador>
+
     @Query("SELECT * FROM valoracion")
-    suspend fun getAllValoracion(): List<Valoracion>
+    fun getAllValoracion(): List<Valoracion>
+    @Insert
+    suspend fun insertValo(valoracion: Valoracion)
+    @Update
+    suspend fun updateValoracion(valoracion: Valoracion)
+    @Delete
+    suspend fun deleteValoracion(valoracion: Valoracion)
+
 }
