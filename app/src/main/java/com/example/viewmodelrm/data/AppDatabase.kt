@@ -9,7 +9,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-@Database(entities = [Marcador::class, Grupo::class], version = 1)
+@Database(entities = [Marcador::class, Grupo::class, Valoracion::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun taskDao(): TaskDao
 
@@ -36,6 +36,16 @@ abstract class AppDatabase : RoomDatabase() {
         private suspend fun CargarDatos(taskDao: TaskDao) {
             val gruposExistentes = taskDao.getAllGrupos()
             val marcadoresExistentes = taskDao.getAllMarcadores()
+            val comentarios = taskDao.getAllValoracion()
+
+            if (comentarios.isEmpty()){
+                taskDao.insertValo(
+                    Valoracion(autor = "Restaurante",
+                        descripcion = "dsfsefsefsefsefsefs"),
+                    Valoracion(autor = "2",
+                        descripcion = "1")
+                )
+            }
             if (gruposExistentes.isEmpty()){
                 taskDao.insertGrupo(
                     Grupo(typeGrupo = "Restaurante"),
