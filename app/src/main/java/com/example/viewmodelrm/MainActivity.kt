@@ -17,7 +17,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.viewmodelrm.view.AppNavigation
 
 class MainActivity : ComponentActivity() {
-    private lateinit var database: AppDatabase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val database = AppDatabase.getDatabase(this)
