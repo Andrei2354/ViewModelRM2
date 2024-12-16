@@ -24,6 +24,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -34,6 +35,8 @@ import androidx.core.content.ContextCompat
 import com.example.viewmodelrm.R
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import androidx.navigation.NavHostController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 data class Tile(val x: Int, val y: Int, val zoomLevel: Int)
 
@@ -51,6 +54,7 @@ val GoogleSat = object : XYTileSource(
         return "${getBaseUrl()}/vt/lyrs=s&x=${tile.x}&y=${tile.y}&z=${tile.zoomLevel}"
     }
 }
+
 
 @Composable
 fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel) {
@@ -129,6 +133,13 @@ fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel)
                         // setup content of info window
                         Text(text = it.title, textAlign = TextAlign.Center)
                         Text(text = it.snippet, fontSize = 10.sp)
+                        Button(
+                            onClick = {
+                                navController.navigate("segundaPantalla")
+                            }
+                        ) {
+                            Text(text = "Comentar")
+                        }
                     }
                 }
             }
@@ -136,3 +147,4 @@ fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel)
 
     }
 }
+
