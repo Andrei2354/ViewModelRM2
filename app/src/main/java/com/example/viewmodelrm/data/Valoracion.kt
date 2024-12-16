@@ -1,10 +1,9 @@
 package com.example.viewmodelrm.data
 
 import androidx.room.Entity
-import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "valoracion")
+@Entity(tableName = "Valoracion")
 data class Valoracion(
     @PrimaryKey(autoGenerate = true)
     val idValo: Int = 0,
