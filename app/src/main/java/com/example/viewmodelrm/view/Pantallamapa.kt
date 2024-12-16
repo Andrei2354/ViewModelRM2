@@ -56,7 +56,6 @@ val GoogleSat = object : XYTileSource(
 fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel) {
 
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
-    val valoracionPlaya by viewModel.valoracionPlaya.collectAsState(initial = emptyList())
 
     TileSourceFactory.addTileSource(GoogleSat)
 
