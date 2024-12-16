@@ -6,10 +6,10 @@ import androidx.room.Relation
 
 @Entity
 data class ValoracionPlaya(
-    @Embedded val valoracion: Valoracion,
+    @Embedded val marcador: Marcador,
     @Relation(
         parentColumn = "id",
         entityColumn = "idValo"
     )
-    val listadovaloracion: List<Valoracion>
+    val valoracionPlaya: List<Valoracion>
 )
