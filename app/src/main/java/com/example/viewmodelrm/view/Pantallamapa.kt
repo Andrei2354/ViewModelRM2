@@ -35,8 +35,6 @@ import androidx.core.content.ContextCompat
 import com.example.viewmodelrm.R
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import androidx.navigation.NavHostController
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 data class Tile(val x: Int, val y: Int, val zoomLevel: Int)
 
@@ -57,9 +55,10 @@ val GoogleSat = object : XYTileSource(
 
 
 @Composable
-fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel) {
+fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier, viewModel: MarcadorViewModel) {
 
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
+
 
     TileSourceFactory.addTileSource(GoogleSat)
 
@@ -119,8 +118,8 @@ fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel)
 
                 Marker(
                     state = marcador,
-                    title = titulo, // add title
-                    snippet = snipe, // add snippet
+                    title = titulo,
+                    snippet = snipe,
                     icon = ContextCompat.getDrawable(LocalContext.current, icono)
                 ){
                     Column(
@@ -133,18 +132,10 @@ fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel)
                         // setup content of info window
                         Text(text = it.title, textAlign = TextAlign.Center)
                         Text(text = it.snippet, fontSize = 10.sp)
-                        Button(
-                            onClick = {
-                                navController.navigate("segundaPantalla")
-                            }
-                        ) {
-                            Text(text = "Comentar")
-                        }
                     }
                 }
             }
         }
-
     }
 }
 
