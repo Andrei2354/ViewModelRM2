@@ -41,14 +41,24 @@ android {
 }
 
 dependencies {
+    //Corrutinas
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+
+    //Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    ksp("androidx.room:room-compiler:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+
+    //ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
+
+    implementation("androidx.navigation:navigation-compose:2.7.2")
+
+    //Mapas
     implementation(libs.osmdroid.android)
     implementation(libs.osm.android.compose)
-    implementation(libs.androidx.navigation.compose)
-    // Room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
