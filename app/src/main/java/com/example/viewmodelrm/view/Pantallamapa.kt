@@ -35,13 +35,8 @@ import androidx.core.content.ContextCompat
 import com.example.viewmodelrm.R
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import androidx.navigation.NavHostController
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 data class Tile(val x: Int, val y: Int, val zoomLevel: Int)
 
@@ -62,10 +57,9 @@ val GoogleSat = object : XYTileSource(
 
 
 @Composable
-fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier, viewModel: MarcadorViewModel) {
+fun Pantallamapa(navController: NavHostController, viewModel: MarcadorViewModel) {
 
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
-
 
     TileSourceFactory.addTileSource(GoogleSat)
 
@@ -89,78 +83,68 @@ fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier
             .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
     }
 
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("crud") },
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Ir a CRUD"
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End // Botón flotante en la esquina inferior derecha
-    ) { innerPadding ->
-        OpenStreetMap(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding), // Respeta el espacio del FAB
-            cameraState = cameraState,
-            properties = mapProperties
-        ) {
-            grupoMarcador.forEach { elementos ->
-                val marcador = rememberMarkerState(
-                    geoPoint = GeoPoint(elementos.marcador.coordenadaX, elementos.marcador.coordenadaY)
-                )
-                var icono by remember { mutableStateOf(R.drawable.restaurante) }
-                var color = Color.Unspecified
+    OpenStreetMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraState = cameraState,
+        properties = mapProperties // add properties
+    ){
+        grupoMarcador.forEach { elementos ->
+            var marcador = rememberMarkerState(
+                geoPoint =  GeoPoint(elementos.marcador.coordenadaX, elementos.marcador.coordenadaY)
+            )
+            var icono by remember { mutableStateOf(R.drawable.restaurante) }
+            var color = Color.Unspecified
 
-                when (elementos.grupoMarcadores[0].idGrupo) {
-                    1 -> {
-                        icono = R.drawable.restaurante
-                        color = Color.White
-                    }
-                    2 -> {
-                        icono = R.drawable.playa
-                        color = Color.Cyan
-                    }
-                    3 -> {
-                        icono = R.drawable.acuario
-                        color = Color.Blue
-                    }
-                    4 -> {
-                        icono = R.drawable.parque
-                        color = Color.Magenta
-                    }
+            when (elementos.grupoMarcadores[0].idGrupo) {
+                1 -> {
+                    icono = R.drawable.restaurante
+                    color = Color.White
                 }
+                2 -> {
+                    icono = R.drawable.playa
+                    color = Color.Cyan
+                }
+                3 -> {
+                    icono = R.drawable.acuario
+                    color = Color.Blue
+                }
+                4 -> {
+                    icono = R.drawable.parque
+                    color = Color.Magenta
+                }
+            }
+            var titulo = elementos.marcador.titulo
+            elementos.grupoMarcadores.forEach { elementogrupo ->
+                var snipe = elementogrupo.typeGrupo
 
-                val titulo = elementos.marcador.titulo
-                elementos.grupoMarcadores.forEach { elementogrupo ->
-                    val snipe = elementogrupo.typeGrupo
-
-                    Marker(
-                        state = marcador,
-                        title = titulo,
-                        snippet = snipe,
-                        icon = ContextCompat.getDrawable(LocalContext.current, icono)
+                Marker(
+                    state = marcador,
+                    title = titulo, // add title
+                    snippet = snipe, // add snippet
+                    icon = ContextCompat.getDrawable(LocalContext.current, icono)
+                ){
+                    Column(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .background(color = color, shape = RoundedCornerShape(7.dp)),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Column(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .background(color = color, shape = RoundedCornerShape(7.dp)),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        // setup content of info window
+                        Text(text = it.title, textAlign = TextAlign.Center)
+                        Text(text = it.snippet, fontSize = 10.sp)
+                        Button(
+                            onClick = {
+                                navController.navigate("segundaPantalla")
+                            }
                         ) {
-                            Text(text = it.title, textAlign = TextAlign.Center)
-                            Text(text = it.snippet, fontSize = 10.sp)
+                            Text(text = "Comentar")
                         }
                     }
                 }
             }
         }
+
     }
 }
 
