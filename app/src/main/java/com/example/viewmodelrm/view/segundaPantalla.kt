@@ -17,9 +17,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewModel) {
-    // Cargar las valoraciones desde el ViewModel
     val valoraciones by viewModel.valoracionPlaya.collectAsState(initial = emptyList())
-
     var newAutor by remember { mutableStateOf("") }
     var newDescripcion by remember { mutableStateOf("") }
     var editValoracion: Valoracion? by remember { mutableStateOf(null) }
@@ -36,14 +34,12 @@ fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewMod
 
         LazyColumn(modifier = Modifier.weight(1f)) {
             items(valoraciones) { valoracion ->
-                valoracion.valoracionPlaya.forEach{ elementovalo ->
+                valoracion.valoracionPlaya.forEach { elementovalo ->
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(8.dp),
-                        onClick = {
-                            editValoracion = elementovalo
-                        }
+                        onClick = { editValoracion = elementovalo }
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text("Autor: ${elementovalo.autor}")
@@ -51,11 +47,9 @@ fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewMod
                         }
                     }
                 }
-
             }
         }
 
-        // Campos para añadir o editar una valoración
         OutlinedTextField(
             value = newAutor,
             onValueChange = { newAutor = it },
@@ -66,28 +60,40 @@ fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewMod
             value = newDescripcion,
             onValueChange = { newDescripcion = it },
             label = { Text("Descripción") },
-            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp)
         )
 
-        // Botón para agregar una nueva valoración
-        Button(
-            onClick = {
-                if (newAutor.isNotBlank() && newDescripcion.isNotBlank()) {
-                    scope.launch {
-                        viewModel.insertValoracion(
-                            Valoracion(autor = newAutor, descripcion = newDescripcion)
-                        )
-                        newAutor = ""
-                        newDescripcion = ""
-                    }
-                }
-            },
-            modifier = Modifier.padding(top = 16.dp).align(Alignment.End)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Agregar")
+            Button(
+                onClick = { navController.navigate("mapa") }, // Navegar al mapa
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Ir al Mapa")
+            }
+
+            Button(
+                onClick = {
+                    if (newAutor.isNotBlank() && newDescripcion.isNotBlank()) {
+                        scope.launch {
+                            viewModel.insertValoracion(
+                                Valoracion(autor = newAutor, descripcion = newDescripcion)
+                            )
+                            newAutor = ""
+                            newDescripcion = ""
+                        }
+                    }
+                },
+                modifier = Modifier.padding(top = 16.dp)
+            ) {
+                Text("Agregar")
+            }
         }
 
-        // Diálogo para editar o eliminar una valoración seleccionada
         if (editValoracion != null) {
             AlertDialog(
                 onDismissRequest = { editValoracion = null },
@@ -108,7 +114,9 @@ fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewMod
                                 editValoracion = editValoracion?.copy(descripcion = it)
                             },
                             label = { Text("Descripción") },
-                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
                         )
                     }
                 },
@@ -136,4 +144,3 @@ fun segundaPantalla(navController: NavHostController, viewModel: MarcadorViewMod
         }
     }
 }
-
