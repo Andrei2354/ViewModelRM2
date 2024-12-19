@@ -6,8 +6,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Embedded
 import androidx.room.Relation
+import java.io.Serializable
 
-@Parcelize
 @Entity(tableName = "marcador")
 data class Marcador(
     @PrimaryKey(autoGenerate = true)
@@ -17,9 +17,8 @@ data class Marcador(
     val coordenadaX: Double,
     val grupoid: Int,
     val isCompleted: Boolean = false
-) : Parcelable
+) : Serializable
 
-@Parcelize
 @Entity(tableName = "Valoracion")
 data class Valoracion(
     @PrimaryKey(autoGenerate = true)
@@ -27,18 +26,17 @@ data class Valoracion(
     val autor: String = "",
     val descripcion: String = "",
     val isCompleted: Boolean = false
-): Parcelable
+): Serializable
 
-@Parcelize
+
 @Entity(tableName = "types")
 data class Grupo(
     @PrimaryKey(autoGenerate = true)
     val idGrupo: Int = 0,
     val typeGrupo: String,
     val isCompleted: Boolean = false
-)  : Parcelable
+)  : Serializable
 
-@Parcelize
 @Entity
 data class ValoracionPlaya(
     @Embedded val marcador: Marcador,
@@ -47,9 +45,9 @@ data class ValoracionPlaya(
         entityColumn = "idValo"
     )
     val valoracionPlaya: List<Valoracion>
-): Parcelable
+): Serializable
 
-@Parcelize
+
 @Entity
 data class GrupoMarcador(
     @Embedded val marcador: Marcador,
@@ -58,7 +56,7 @@ data class GrupoMarcador(
         entityColumn = "idGrupo"
     )
     val grupoMarcadores: List<Grupo>
-): Parcelable
+): Serializable
 
 
 

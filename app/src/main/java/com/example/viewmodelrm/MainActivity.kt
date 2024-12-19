@@ -14,27 +14,28 @@ import androidx.compose.foundation.layout.padding
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import com.example.viewmodelrm.viewmodel.ViewModelFactory
 import androidx.navigation.compose.rememberNavController
-import com.example.viewmodelrm.view.AppNavigation
+//import com.example.viewmodelrm.view.AppNavigation
+import com.example.viewmodelrm.view.MainView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val database = AppDatabase.getDatabase(this)
-        val taskdao = database.taskDao()
-        enableEdgeToEdge()
         setContent {
             ViewModelRMTheme {
+                // Usar el NavController
                 val navController = rememberNavController()
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
 
-                    val viewModel: MarcadorViewModel = viewModel(factory = ViewModelFactory(taskdao))
+                // Obtener la base de datos y el DAO
+                val database = AppDatabase.getDatabase(this)
+                val taskdao = database.taskDao()
 
+                // Obtener el ViewModel con ViewModelFactory
+                val viewModel: MarcadorViewModel = viewModel(factory = ViewModelFactory(taskdao))
 
-                    AppNavigation(
-                        navController = navController,
-                        viewModel = viewModel,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                // Llamamos a AppNavigation pasando el navController y el viewModel
+                setContent {
+                    MainView(viewModel = viewModel)
+
                 }
             }
         }

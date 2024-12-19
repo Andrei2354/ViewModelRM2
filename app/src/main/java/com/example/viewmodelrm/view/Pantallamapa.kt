@@ -62,28 +62,40 @@ val GoogleSat = object : XYTileSource(
 
 
 @Composable
-fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier, viewModel: MarcadorViewModel) {
+fun MainView(viewModel: MarcadorViewModel) {
 
+    var currentView by remember { mutableStateOf("home") }
+
+    when (currentView) {
+        "home" -> Pantallamapa(
+            viewModel = viewModel,
+            onNavigateToMap = { currentView = "map" } // Cambia la vista al mapa
+        )
+        "map" -> segundaPantalla(
+            onNavigateBack = { currentView = "home" },
+            viewModel = viewModel // Regresa al inicio
+        )
+    }
+}
+
+@Composable
+fun Pantallamapa(onNavigateToMap: () -> Unit, viewModel: MarcadorViewModel) {
+    // Inicializar ViewModel con la ViewModelFactory
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
-
 
     TileSourceFactory.addTileSource(GoogleSat)
 
-
     val cameraState = rememberCameraState {
-        geoPoint = GeoPoint(28.992986562609960,  -13.495383991854991)
+        geoPoint = GeoPoint(28.992986562609960, -13.495383991854991)
         zoom = 15.0 // optional, default is 5.0
     }
 
-    // define properties with remember with default value
     var mapProperties by remember {
         mutableStateOf(DefaultMapProperties)
     }
 
-    // setup mapProperties in side effect
     SideEffect {
         mapProperties = mapProperties
-            //.copy(isTilesScaledToDpi = true)
             .copy(tileSources = TileSourceFactory.MAPNIK)
             .copy(isEnableRotationGesture = true)
             .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
@@ -92,7 +104,7 @@ fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { navController.navigate("crud") },
+                onClick = onNavigateToMap,
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
@@ -102,12 +114,12 @@ fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End // Botón flotante en la esquina inferior derecha
+        floatingActionButtonPosition = FabPosition.End
     ) { innerPadding ->
         OpenStreetMap(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding), // Respeta el espacio del FAB
+                .padding(innerPadding),
             cameraState = cameraState,
             properties = mapProperties
         ) {
@@ -163,4 +175,3 @@ fun Pantallamapa(navController: NavHostController, modifier: Modifier = Modifier
         }
     }
 }
-
