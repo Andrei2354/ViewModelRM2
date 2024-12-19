@@ -60,26 +60,8 @@ val GoogleSat = object : XYTileSource(
     }
 }
 
-
 @Composable
-fun MainView(viewModel: MarcadorViewModel) {
-
-    var currentView by remember { mutableStateOf("home") }
-
-    when (currentView) {
-        "home" -> Pantallamapa(
-            viewModel = viewModel,
-            onNavigateToMap = { currentView = "map" } // Cambia la vista al mapa
-        )
-        "map" -> segundaPantalla(
-            onNavigateBack = { currentView = "home" },
-            viewModel = viewModel // Regresa al inicio
-        )
-    }
-}
-
-@Composable
-fun Pantallamapa(onNavigateToMap: () -> Unit, viewModel: MarcadorViewModel) {
+fun Pantallamapa(viewModel: MarcadorViewModel, onChangePantalla: () -> Unit) {
     // Inicializar ViewModel con la ViewModelFactory
     val grupoMarcador by viewModel.grupoMarcador.collectAsState(initial = emptyList())
 
@@ -100,32 +82,24 @@ fun Pantallamapa(onNavigateToMap: () -> Unit, viewModel: MarcadorViewModel) {
             .copy(isEnableRotationGesture = true)
             .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
     }
-
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onNavigateToMap,
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Ir a CRUD"
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { innerPadding ->
+    Column {
+        Button(onClick = {
+           // navController.navigate("crud")
+            onChangePantalla()
+        }) {
+            Text("+")
+        }
         OpenStreetMap(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier = Modifier.weight(1f),
             cameraState = cameraState,
             properties = mapProperties
         ) {
             grupoMarcador.forEach { elementos ->
                 val marcador = rememberMarkerState(
-                    geoPoint = GeoPoint(elementos.marcador.coordenadaX, elementos.marcador.coordenadaY)
+                    geoPoint = GeoPoint(
+                        elementos.marcador.coordenadaX,
+                        elementos.marcador.coordenadaY
+                    )
                 )
                 var icono by remember { mutableStateOf(R.drawable.restaurante) }
                 var color = Color.Unspecified
@@ -135,14 +109,17 @@ fun Pantallamapa(onNavigateToMap: () -> Unit, viewModel: MarcadorViewModel) {
                         icono = R.drawable.restaurante
                         color = Color.White
                     }
+
                     2 -> {
                         icono = R.drawable.playa
                         color = Color.Cyan
                     }
+
                     3 -> {
                         icono = R.drawable.acuario
                         color = Color.Blue
                     }
+
                     4 -> {
                         icono = R.drawable.parque
                         color = Color.Magenta

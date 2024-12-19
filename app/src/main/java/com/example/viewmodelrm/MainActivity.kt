@@ -14,29 +14,19 @@ import androidx.compose.foundation.layout.padding
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
 import com.example.viewmodelrm.viewmodel.ViewModelFactory
 import androidx.navigation.compose.rememberNavController
-//import com.example.viewmodelrm.view.AppNavigation
-import com.example.viewmodelrm.view.MainView
+import com.example.viewmodelrm.view.PantallaApp
+//import com.example.viewmodelrm.view.MainView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+//            val navController = rememberNavController()
+            val database = AppDatabase.getDatabase(this)
+            val taskdao = database.taskDao()
+            val viewModel: MarcadorViewModel = viewModel(factory = ViewModelFactory(taskdao))
             ViewModelRMTheme {
-                // Usar el NavController
-                val navController = rememberNavController()
-
-                // Obtener la base de datos y el DAO
-                val database = AppDatabase.getDatabase(this)
-                val taskdao = database.taskDao()
-
-                // Obtener el ViewModel con ViewModelFactory
-                val viewModel: MarcadorViewModel = viewModel(factory = ViewModelFactory(taskdao))
-
-                // Llamamos a AppNavigation pasando el navController y el viewModel
-                setContent {
-                    MainView(viewModel = viewModel)
-
-                }
+                PantallaApp(viewModel = viewModel)
             }
         }
     }

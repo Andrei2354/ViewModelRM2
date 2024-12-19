@@ -17,7 +17,7 @@ import com.example.viewmodelrm.data.Valoracion
 import kotlinx.coroutines.launch
 
 @Composable
-fun segundaPantalla(onNavigateBack: () -> Unit, viewModel: MarcadorViewModel) {
+fun segundaPantalla(viewModel: MarcadorViewModel, onChangePantalla: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     // Observa las valoraciones desde el ViewModel
@@ -84,7 +84,7 @@ fun segundaPantalla(onNavigateBack: () -> Unit, viewModel: MarcadorViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = onNavigateBack,
+                onClick = { onChangePantalla() }, //navController.navigate("mapa")},
                 modifier = Modifier.padding(top = 16.dp)
             ) {
                 Text("Ir al Mapa")
