@@ -36,14 +36,14 @@ abstract class AppDatabase : RoomDatabase() {
         private suspend fun CargarDatos(taskDao: TaskDao) {
             val gruposExistentes = taskDao.getAllGrupos()
             val marcadoresExistentes = taskDao.getAllMarcadores()
-            val comentarios = taskDao.getAllValoracion()
+            val comentarios = taskDao.getAllValoracion2()
 
             if (comentarios.isEmpty()){
                 taskDao.insertValo(
-                    Valoracion(autor = "Restaurante",
+                    Valoracion(
+                        idValo = 1,
+                        autor = "Restaurante",
                         descripcion = "dsfsefsefsefsefsefs"),
-                    Valoracion(autor = "2",
-                        descripcion = "1")
                 )
             }
             if (gruposExistentes.isEmpty()){
