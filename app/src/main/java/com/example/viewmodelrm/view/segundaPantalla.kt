@@ -84,13 +84,6 @@ fun segundaPantalla(viewModel: MarcadorViewModel, onChangePantalla: () -> Unit) 
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Button(
-                onClick = { onChangePantalla() }, //navController.navigate("mapa")},
-                modifier = Modifier.padding(top = 16.dp)
-            ) {
-                Text("Ir al Mapa")
-            }
-
-            Button(
                 onClick = {
                     if (newAutor.isNotBlank() && newDescripcion.isNotBlank()) {
                         isLoading = true

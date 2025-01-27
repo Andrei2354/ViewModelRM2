@@ -21,9 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import com.example.viewmodelrm.data.AppDatabase
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
-import com.example.viewmodelrm.viewmodel.ViewModelFactory
 
 @Composable
 fun PantallaApp(viewModel: MarcadorViewModel, navController: NavHostController = rememberNavController()) {
@@ -33,8 +31,6 @@ fun PantallaApp(viewModel: MarcadorViewModel, navController: NavHostController =
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    //val destino = if (pantallamapa) "crud" else "mapa"
-                    //navController.navigate(destino)
                     pantallamapa = !pantallamapa
                 },
                 containerColor = MaterialTheme.colorScheme.primary,
@@ -53,17 +49,5 @@ fun PantallaApp(viewModel: MarcadorViewModel, navController: NavHostController =
         } else {
             segundaPantalla(viewModel) { pantallamapa = true }
         }
-//        NavHost(
-//            navController = navController,
-//            startDestination = "crud",
-//            modifier = Modifier.padding(innerPadding)
-//        ) {
-//            composable("mapa") {
-//                Pantallamapa(navController = navController, viewModel = viewModel)
-//            }
-//            composable("crud") {
-//                segundaPantalla(navController = navController, viewModel = viewModel)
-//            }
-//        }
     }
 }

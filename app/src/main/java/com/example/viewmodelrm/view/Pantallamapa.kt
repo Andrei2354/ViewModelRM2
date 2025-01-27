@@ -34,14 +34,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
 import com.example.viewmodelrm.R
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
-import androidx.navigation.NavHostController
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 
 data class Tile(val x: Int, val y: Int, val zoomLevel: Int)
 
@@ -83,12 +75,6 @@ fun Pantallamapa(viewModel: MarcadorViewModel, onChangePantalla: () -> Unit) {
             .copy(zoomButtonVisibility = ZoomButtonVisibility.NEVER)
     }
     Column {
-        Button(onClick = {
-           // navController.navigate("crud")
-            onChangePantalla()
-        }) {
-            Text("+")
-        }
         OpenStreetMap(
             modifier = Modifier.weight(1f),
             cameraState = cameraState,
