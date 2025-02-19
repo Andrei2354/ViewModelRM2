@@ -23,6 +23,7 @@ data class Marcador(
 data class Valoracion(
     @PrimaryKey(autoGenerate = true)
     val idValo: Int = 0,
+    val idPlaya: Int,
     val autor: String = "",
     val descripcion: String = "",
     val isCompleted: Boolean = false
@@ -57,6 +58,5 @@ data class GrupoMarcador(
     )
     val grupoMarcadores: List<Grupo>
 ): Serializable
-
 
 
