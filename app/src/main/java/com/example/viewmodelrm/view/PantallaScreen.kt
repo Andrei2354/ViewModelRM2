@@ -1,7 +1,5 @@
 package com.example.viewmodelrm.view
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FabPosition
@@ -10,9 +8,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +17,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.viewmodelrm.viewmodel.MarcadorViewModel
+
 
 @Composable
 fun PantallaApp(viewModel: MarcadorViewModel, navController: NavHostController = rememberNavController()) {
@@ -42,12 +38,12 @@ fun PantallaApp(viewModel: MarcadorViewModel, navController: NavHostController =
                 )
             }
         },
-        floatingActionButtonPosition = FabPosition.End
+        floatingActionButtonPosition = FabPosition.EndOverlay
     ) { innerPadding ->
         if (pantallamapa) {
             Pantallamapa(viewModel) { pantallamapa = false }
         } else {
-            segundaPantalla(viewModel) { pantallamapa = true }
+            SegundaPantalla(viewModel) { pantallamapa = true }
         }
     }
 }

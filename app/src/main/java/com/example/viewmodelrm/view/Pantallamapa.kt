@@ -111,7 +111,6 @@ fun Pantallamapa(viewModel: MarcadorViewModel, onChangePantalla: () -> Unit) {
                         color = Color.Magenta
                     }
                 }
-
                 val titulo = elementos.marcador.titulo
                 elementos.grupoMarcadores.forEach { elementogrupo ->
                     val snipe = elementogrupo.typeGrupo
