@@ -41,8 +41,10 @@ abstract class AppDatabase : RoomDatabase() {
             if (comentarios.isEmpty()){
                 taskDao.insertValo(
                     Valoracion(
+                        idPlaya = 1,
                         autor = "Restaurante",
                         descripcion = "dsfsefsefsefsefsefs"),
+
                 )
             }
             if (gruposExistentes.isEmpty()){
